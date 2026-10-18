@@ -1,0 +1,11 @@
+# Node asılılıqları (Render özü npm install ilə yükləyəcək)
+node_modules/
+
+# Məxfi Firebase açarı (GitHub-a açıq düşməməsi üçün)
+serviceAccountKey.json
+
+# Ətraf mühit faylları və loqlar
+.env
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
