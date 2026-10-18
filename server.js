@@ -2,8 +2,14 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 
-// Firebase faylının düzgün oxunması
-const serviceAccount = require('./serviceAccountKey.json');
+// Firebase qоoşulması (Render üçün Environment Variable və ya lokal fayl dəstəyi)
+let serviceAccount;
+
+if (process.env.FIREBASE_CONFIG) {
+    serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+} else {
+    serviceAccount = require('./serviceAccountKey.json');
+}
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -17,17 +23,7 @@ const PORT = process.env.PORT || 3000;
 // CORS Məntiqi - Netlify daxil olmaqla bütün domenlərdən gələn sorğulara icazə verir
 app.use(cors());
 app.use(express.json());
-let serviceAccount;
 
-if (process.env.FIREBASE_CONFIG) {
-    serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
-} else {
-    serviceAccount = require('./serviceAccountKey.json');
-}
-
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount)
-});
 // Aktiv imtahan sessiyalarını yadda saxlamaq üçün
 const activeExams = new Map();
 
