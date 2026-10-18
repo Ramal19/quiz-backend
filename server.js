@@ -2,13 +2,26 @@ const express = require('express');
 const cors = require('cors');
 const admin = require('firebase-admin');
 
-// Firebase qоoşulması (Render üçün Environment Variable və ya lokal fayl dəstəyi)
+// Firebase qoşulması (Render üçün Environment Variable və ya lokal fayl dəstəyi)
 let serviceAccount;
 
 if (process.env.FIREBASE_CONFIG) {
-    serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+    try {
+        serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+    } catch (e) {
+        console.error("XƏTA: FIREBASE_CONFIG JSON formatında deyil!", e.message);
+    }
 } else {
-    serviceAccount = require('./serviceAccountKey.json');
+    try {
+        serviceAccount = require('./serviceAccountKey.json');
+    } catch (e) {
+        console.error("XƏTA: serviceAccountKey.json faylı tapılmadı!");
+    }
+}
+
+if (!serviceAccount) {
+    console.error("KRİTİK XƏTA: Firebase konfiqurasiya məlumatları yüklənmədi! Render Environment Variables hissəsini yoxlayın.");
+    process.exit(1);
 }
 
 admin.initializeApp({
