@@ -17,7 +17,17 @@ const PORT = process.env.PORT || 3000;
 // CORS Məntiqi - Netlify daxil olmaqla bütün domenlərdən gələn sorğulara icazə verir
 app.use(cors());
 app.use(express.json());
+let serviceAccount;
 
+if (process.env.FIREBASE_CONFIG) {
+    serviceAccount = JSON.parse(process.env.FIREBASE_CONFIG);
+} else {
+    serviceAccount = require('./serviceAccountKey.json');
+}
+
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+});
 // Aktiv imtahan sessiyalarını yadda saxlamaq üçün
 const activeExams = new Map();
 
